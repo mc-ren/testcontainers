@@ -26,7 +26,6 @@ namespace ContactsBook.FunctionalTests
         [Fact]
         public async Task ShouldSuccessfullyRunCrudOperationsForDatabases()
         {
-            var cdd = _mongoDbContainer.GetConnectionString();
             var mongoRepo = new ContactsMongoRepository(_mongoDbContainer.GetConnectionString());
             var postgresRepo = new ContactsPgRepository(_postgreSqlContainer.GetConnectionString());
 
