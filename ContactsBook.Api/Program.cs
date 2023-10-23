@@ -16,13 +16,12 @@ var builder = WebApplication.CreateBuilder(args);
         x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
-    // Inject IConfiguration in the constructor of your repository classes.
-    services.AddScoped<IContactsMongoRepository>(mongo =>
+    services.AddScoped<IContactsMongoRepository>(_ =>
     {
         return new ContactsMongoRepository(builder.Configuration.GetConnectionString("MongoDb"));
     });
 
-    services.AddScoped<IContactsPgRepository>(postgres =>
+    services.AddScoped<IContactsPgRepository>(_ =>
     {
         return new ContactsPgRepository(builder.Configuration.GetConnectionString("Postgres"));
     });
@@ -35,10 +34,9 @@ var app = builder.Build();
 {
     // global error handler
     app.UseMiddleware<ErrorHandlerMiddleware>();
-
     app.MapControllers();
 }
 
-app.Run("http://localhost:4000");
+app.Run("http://localhost:4000"); // for local use only 
 
 public partial class Program {}
