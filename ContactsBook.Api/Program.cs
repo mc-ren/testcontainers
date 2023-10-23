@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using ContactsBook.Api;
 using ContactsBook.Api.Helpers;
 using ContactsBook.Api.Repositories;
 

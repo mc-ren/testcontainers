@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
+using Testcontainers;
 using ContactsBook.Api;
 using ContactsBook.Api.Controllers;
 using ContactsBook.Api.Repositories;
@@ -12,15 +13,21 @@ using ContactsBook.Api.Models;
 
 namespace ContactsBook.FunctionalTests
 {
-    public class ContactsScenarios : IAsyncLifetime
+    public class ContactsScenariosTests : IAsyncLifetime
     {
         private readonly MongoDbContainer _mongoDbContainer;
         private readonly PostgreSqlContainer _postgreSqlContainer;
 
-        public ContactsScenarios()
+        public ContactsScenariosTests()
         {
-            _mongoDbContainer = new MongoDbBuilder().Build();
-            _postgreSqlContainer = new PostgreSqlBuilder().Build();
+            _mongoDbContainer = new MongoDbBuilder()
+                .WithPortBinding(56001)  // not required but nice for testing
+                .Build();
+
+            _postgreSqlContainer = new PostgreSqlBuilder()
+                .WithPortBinding(56000)  // not required but nice for testing
+                .WithDatabase("testDb")  // not required but nice for testing
+                .Build();
         }
 
         [Fact]
@@ -102,6 +109,7 @@ namespace ContactsBook.FunctionalTests
             await _mongoDbContainer.StartAsync();
             await _postgreSqlContainer.StartAsync();
 
+            // run scripts to setup tables, indexes, etc..
             SetupPostgres(_postgreSqlContainer.GetConnectionString());
         }
 
